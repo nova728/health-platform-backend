@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.healthplatform.mapper.MedicineReminderMapper">
+    <resultMap id="ReminderMap" type="com.health.healthplatform.entity.MedicineReminder">
+        <id property="id" column="id"/>
+        <result property="medicineId" column="medicine_id"/>
+        <result property="reminderTime" column="reminder_time"/>
+        <result property="repeatType" column="repeat_type"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="medicine" javaType="com.health.healthplatform.entity.Medicine">
+            <id property="id" column="m_id"/>
+            <result property="name" column="m_name"/>
+            <result property="dosage" column="m_dosage"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO medicine_reminders (
+            medicine_id, reminder_time, repeat_type, is_active, created_at, updated_at
+        ) VALUES (
+                     #{medicineId}, #{reminderTime}, #{repeatType}, #{isActive}, NOW(), NOW()
+                 )
+    </insert>
+
+    <update id="update">
+        UPDATE medicine_reminders
+        SET reminder_time = #{reminderTime},
+            repeat_type = #{repeatType},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE medicine_reminders
+        SET is_active = #{isActive},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM medicine_reminders WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByMedicineId">
+        DELETE FROM medicine_reminders WHERE medicine_id = #{medicineId}
+    </delete>
+
+    <select id="selectByMedicineId" resultMap="ReminderMap">
+        SELECT
+            r.*,
+            m.id as m_id,
+            m.name as m_name,
+            m.dosage as m_dosage
+        FROM medicine_reminders r
+                 LEFT JOIN medicines m ON r.medicine_id = m.id
+        WHERE r.medicine_id = #{medicineId}
+        ORDER BY r.reminder_time
+    </select>
+
+    <select id="selectByUserId" resultMap="ReminderMap">
+        SELECT
+            r.*,
+            m.id as m_id,
+            m.name as m_name,
+            m.dosage as m_dosage
+        FROM medicine_reminders r
+                 LEFT JOIN medicines m ON r.medicine_id = m.id
+        WHERE m.user_id = #{userId}
+        ORDER BY r.reminder_time
+    </select>
+
+    <select id="selectByIdAndUserId" resultMap="ReminderMap">
+        SELECT r.*,
+               m.id as m_id,
+               m.name as m_name,
+               m.dosage as m_dosage
+        FROM medicine_reminders r
+                 LEFT JOIN medicines m ON r.medicine_id = m.id
+        WHERE r.id = #{id}
+          AND m.user_id = #{userId}
+    </select>
+</mapper>

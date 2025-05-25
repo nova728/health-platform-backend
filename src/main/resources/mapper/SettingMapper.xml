@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.healthplatform.mapper.SettingMapper">
+    <resultMap id="UserSettingsMap" type="com.health.healthplatform.entity.UserSettings">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="systemNotification" column="system_notification"/>
+        <result property="exerciseNotification" column="exercise_notification"/>
+        <result property="dietNotification" column="diet_notification"/>
+        <result property="profileVisibility" column="profile_visibility"/>
+        <result property="exerciseVisibility" column="exercise_visibility"/>
+        <result property="language" column="language"/>
+        <result property="theme" column="theme"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="getUserSettings" resultMap="UserSettingsMap">
+        SELECT * FROM user_settings WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateNotificationSettings" parameterType="com.health.healthplatform.entity.UserSettings">
+        UPDATE user_settings
+        SET system_notification = #{systemNotification},
+            exercise_notification = #{exerciseNotification},
+            diet_notification = #{dietNotification},
+            update_time = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updatePrivacySettings" parameterType="com.health.healthplatform.entity.UserSettings">
+        UPDATE user_settings
+        SET profile_visibility = #{profileVisibility},
+            exercise_visibility = #{exerciseVisibility},
+            update_time = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateGeneralSettings" parameterType="com.health.healthplatform.entity.UserSettings">
+        UPDATE user_settings
+        SET language = #{language},
+            theme = #{theme},
+            update_time = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+    <insert id="createUserSettings" parameterType="com.health.healthplatform.entity.UserSettings">
+        INSERT INTO user_settings (
+            user_id,
+            system_notification,
+            exercise_notification,
+            diet_notification,
+            profile_visibility,
+            exercise_visibility,
+            language,
+            theme
+        ) VALUES (
+                     #{userId},
+                     #{systemNotification},
+                     #{exerciseNotification},
+                     #{dietNotification},
+                     #{profileVisibility},
+                     #{exerciseVisibility},
+                     #{language},
+                     #{theme}
+                 )
+    </insert>
+
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{newPassword}
+        WHERE id = #{userId}
+    </update>
+
+    <update id="updatePhone">
+        UPDATE user
+        SET phone = #{phone}
+        WHERE id = #{userId}
+    </update>
+
+    <update id="updateEmail">
+        UPDATE user
+        SET email = #{email}
+        WHERE id = #{userId}
+    </update>
+</mapper>

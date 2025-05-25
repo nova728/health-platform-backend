@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.healthplatform.mapper.health_data.HealthDataMapper">
+    <resultMap id="HealthDataMap" type="com.health.healthplatform.entity.healthdata.HealthData">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="heart_rate" property="heartRate"/>
+        <result column="sleep_duration" property="sleepDuration"/>
+        <result column="sleep_quality" property="sleepQuality"/>
+        <result column="steps" property="steps"/>
+        <result column="blood_pressure_systolic" property="bloodPressureSystolic"/>
+        <result column="blood_pressure_diastolic" property="bloodPressureDiastolic"/>
+        <result column="weight" property="weight"/>
+        <result column="bmi" property="bmi"/>
+        <result column="record_date" property="recordDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="findLatestDataByUserId" resultMap="HealthDataMap">
+        SELECT
+            id,
+            user_id,
+            heart_rate,
+            sleep_duration,
+            sleep_quality,
+            steps,
+            blood_pressure_systolic,
+            blood_pressure_diastolic,
+            weight,
+            bmi,
+            height,
+            record_date,
+            create_time,
+            update_time
+        FROM health_data
+        WHERE user_id = #{userId}
+        ORDER BY record_date DESC
+            LIMIT 7
+    </select>
+</mapper>

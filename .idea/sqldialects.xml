@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/ArticleMapper.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/CategoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/NotificationMapper.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/TagMapper.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/UserArticleMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/UserMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/BloodPressureHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/BmiHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/ExerciseGoalMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/ExerciseRecordMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/HealthDataMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/HeartRateHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/HeightHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/SleepHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/StepsHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/mapper/health_data/WeightHistoryMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/health/healthplatform/service/ArticleService.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/HealthDataMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/MedicineMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/MedicineReminderMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/SettingMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/UserMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/VerificationCodeMapper.xml" dialect="GenericSQL" />
+  </component>
+</project>
