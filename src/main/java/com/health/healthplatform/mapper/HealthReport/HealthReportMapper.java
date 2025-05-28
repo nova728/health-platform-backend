@@ -1,5 +1,6 @@
 package com.health.healthplatform.mapper.HealthReport;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.health.healthplatform.entity.HealthReport.HealthReport;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -7,10 +8,11 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Mapper
-public interface HealthReportMapper {
+public interface HealthReportMapper extends BaseMapper<HealthReport> {
     
     @Insert("INSERT INTO health_reports (user_id, report_time, " +
             "bmi, bmi_status, weight, height, " +
@@ -54,5 +56,14 @@ public interface HealthReportMapper {
             "WHERE user_id = #{userId} AND deleted = 0")
     int countByUserId(@Param("userId") Integer userId);
 
+    @Select("SELECT * FROM health_reports WHERE user_id = #{userId} " +
+            "AND report_time BETWEEN #{startDate} AND #{endDate} " +
+            "AND deleted = 0 " +
+            "ORDER BY report_time DESC")
+    List<HealthReport> findByUserIdAndDateRange(
+        @Param("userId") Integer userId,
+        @Param("startDate") Date startDate,
+        @Param("endDate") Date endDate
+    );
     
 }

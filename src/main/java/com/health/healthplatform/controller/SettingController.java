@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ObjectInputFilter;
+import java.util.HashMap;
 import java.util.Map;
 
 // 基础包
@@ -45,25 +46,14 @@ public class SettingController {
     private SettingService settingService;
 
     @Resource
-    private UserService userService;
-
-    @Autowired
+    private UserService userService;    @Autowired
     private VerificationCodeService verificationCodeService;
 
     @Autowired
     private EmailService emailService;
 
-    @Value("${aliyun.sms.access-key-id}")
-    private String accessKeyId;
-
-    @Value("${aliyun.sms.access-key-secret}")
-    private String accessKeySecret;
-
-    @Value("${aliyun.sms.sign-name}")
-    private String signName;
-
-    @Value("${aliyun.sms.template-code}")
-    private String templateCode;
+    @Autowired
+    private SmsService smsService;
 
     // 修改密码
     @CrossOrigin
@@ -91,9 +81,7 @@ public class SettingController {
         } catch (Exception e) {
             return Result.failure(500, "密码修改失败: " + e.getMessage());
         }
-    }
-
-    // 更新手机号
+    }    // 更新手机号
     @CrossOrigin
     @PostMapping("/{userId}/phone")
     public Result updatePhone(
@@ -103,17 +91,23 @@ public class SettingController {
             String phone = body.get("phone");
             String verificationCode = body.get("verificationCode");
 
-            // TODO: 验证验证码是否正确
-            // 这里应该添加验证码验证逻辑
+            // 验证手机号格式
+            if (!smsService.isValidPhoneNumber(phone)) {
+                return Result.failure(400, "手机号格式不正确");
+            }
+
+            // 验证验证码
+            boolean isValid = verificationCodeService.verifyCode(userId, phone, verificationCode, "PHONE");
+            if (!isValid) {
+                return Result.failure(400, "验证码错误或已过期");
+            }
 
             settingService.updatePhone(userId, phone);
             return Result.success("手机号更新成功");
         } catch (Exception e) {
             return Result.failure(500, "手机号更新失败: " + e.getMessage());
         }
-    }
-
-    // 更新邮箱
+    }    // 更新邮箱
     @CrossOrigin
     @PostMapping("/{userId}/email")
     public Result updateEmail(
@@ -123,8 +117,11 @@ public class SettingController {
             String email = body.get("email");
             String verificationCode = body.get("verificationCode");
 
-            // TODO: 验证验证码是否正确
-            // 这里应该添加验证码验证逻辑
+            // 验证验证码
+            boolean isValid = verificationCodeService.verifyCode(userId, email, verificationCode, "EMAIL");
+            if (!isValid) {
+                return Result.failure(400, "验证码错误或已过期");
+            }
 
             settingService.updateEmail(userId, email);
             return Result.success("邮箱更新成功");
@@ -203,9 +200,7 @@ public class SettingController {
         } catch (Exception e) {
             return Result.failure(500, "通用设置更新失败: " + e.getMessage());
         }
-    }
-
-    // 发送手机验证码
+    }    // 发送手机验证码
     @CrossOrigin
     @PostMapping("/{userId}/send-phone-code")
     public Result sendPhoneVerificationCode(
@@ -217,50 +212,26 @@ public class SettingController {
                 return Result.failure(400, "手机号不能为空");
             }
 
+            // 验证手机号格式
+            if (!smsService.isValidPhoneNumber(phone)) {
+                return Result.failure(400, "手机号格式不正确");
+            }
+
             // 生成并存储验证码
             VerificationCode verificationCode = verificationCodeService.createVerificationCode(
                     userId, phone, "PHONE");
 
             // 发送短信
-            sendSms(phone, verificationCode.getCode());
-
-            return Result.success("验证码发送成功");
-        } catch (Exception e) {
-            return Result.failure(500, "验证码发送失败: " + e.getMessage());
-        }
-    }
-
-
-    // 发送短信的私有方法
-    private void sendSms(String phone, String code) throws Exception {
-        try {
-            Config config = new Config()
-                    .setAccessKeyId(accessKeyId)
-                    .setAccessKeySecret(accessKeySecret)
-                    .setEndpoint("dysmsapi.aliyuncs.com");
-
-            Client client = new Client(config);
-            SendSmsRequest sendSmsRequest = new SendSmsRequest()
-                    .setPhoneNumbers(phone)
-                    .setSignName(signName)
-                    .setTemplateCode(templateCode)
-                    .setTemplateParam("{\"code\":\"" + code + "\"}");
-
-            // 发送短信并获取响应
-            com.aliyun.dysmsapi20170525.models.SendSmsResponse response = client.sendSms(sendSmsRequest);
-
-            // 记录响应结果
-            log.info("短信发送结果 - 手机号: {}, 请求ID: {}, 发送状态: {}, 状态码: {}",
-                    phone, response.getBody().getRequestId(),
-                    response.getBody().getMessage(), response.getBody().getCode());
-
-            // 检查发送状态
-            if (!"OK".equalsIgnoreCase(response.getBody().getCode())) {
-                throw new RuntimeException("短信发送失败: " + response.getBody().getMessage());
+            boolean sendSuccess = smsService.sendVerificationCode(phone, verificationCode.getCode());
+            
+            if (sendSuccess) {
+                return Result.success("验证码发送成功");
+            } else {
+                return Result.failure(500, "验证码发送失败，请稍后重试");
             }
         } catch (Exception e) {
-            log.error("短信发送异常 - 手机号: {}, 错误: {}", phone, e.getMessage());
-            throw new RuntimeException("短信发送失败", e);
+            log.error("发送手机验证码异常", e);
+            return Result.failure(500, "验证码发送失败: " + e.getMessage());
         }
     }
 
@@ -308,6 +279,65 @@ public class SettingController {
             return Result.success("验证码发送成功");
         } catch (Exception e) {
             return Result.failure(500, "验证码发送失败: " + e.getMessage());
+        }
+    }
+
+    // 检查阿里云配置状态
+    @CrossOrigin
+    @GetMapping("/check-sms-config")
+    public Result checkSmsConfig() {
+        try {
+            Map<String, Object> configStatus = new HashMap<>();
+            
+            // 检查配置是否正确加载
+            configStatus.put("accessKeyIdConfigured", smsService.isAccessKeyConfigured());
+            configStatus.put("accessKeySecretConfigured", smsService.isAccessKeySecretConfigured());            configStatus.put("signNameConfigured", smsService.isSignNameConfigured());
+            configStatus.put("templateCodeConfigured", smsService.isTemplateCodeConfigured());
+            
+            // 检查手机号格式验证
+            configStatus.put("phoneValidationWorking", smsService.isValidPhoneNumber("13912345678"));
+            
+            return Result.success(configStatus);
+        } catch (Exception e) {
+            log.error("检查短信配置异常", e);
+            return Result.failure(500, "检查短信配置异常: " + e.getMessage());
+        }
+    }
+
+    // 测试短信发送接口 (仅用于调试)
+    @CrossOrigin
+    @PostMapping("/test-sms")
+    public Result testSms(@RequestBody Map<String, String> body) {
+        try {
+            String phone = body.get("phone");
+            String code = body.get("code");
+            
+            if (phone == null || phone.isEmpty()) {
+                return Result.failure(400, "手机号不能为空");
+            }
+            
+            if (code == null || code.isEmpty()) {
+                code = "123456"; // 默认测试验证码
+            }
+
+            log.info("测试短信发送 - 手机号: {}, 验证码: {}", phone, code);
+            
+            // 验证手机号格式
+            if (!smsService.isValidPhoneNumber(phone)) {
+                return Result.failure(400, "手机号格式不正确");
+            }
+
+            // 直接调用短信服务
+            boolean sendSuccess = smsService.sendVerificationCode(phone, code);
+            
+            if (sendSuccess) {
+                return Result.success("测试短信发送成功");
+            } else {
+                return Result.failure(500, "测试短信发送失败");
+            }
+        } catch (Exception e) {
+            log.error("测试短信发送异常", e);
+            return Result.failure(500, "测试短信发送异常: " + e.getMessage());
         }
     }
 }

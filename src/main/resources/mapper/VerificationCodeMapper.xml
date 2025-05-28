@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.health.healthplatform.mapper.VerificationCodeMapper">
-    <insert id="insert" parameterType="com.health.healthplatform.entity.VerificationCode">
+<mapper namespace="com.health.healthplatform.mapper.VerificationCodeMapper">    <insert id="insert" parameterType="com.health.healthplatform.entity.VerificationCode">
         INSERT INTO verification_code (
-            user_id, phone, email, code, create_time, expire_time, used, type
+            user_id, target, code, create_time, expire_time, used, type
         ) VALUES (
-                     #{userId}, #{phone}, #{email}, #{code}, #{createTime}, #{expireTime}, #{used}, #{type}
+                     #{userId}, #{target}, #{code}, #{createTime}, #{expireTime}, #{used}, #{type}
                  )
     </insert>
 
     <select id="findLatestValidCode" resultType="com.health.healthplatform.entity.VerificationCode">
         SELECT * FROM verification_code
         WHERE user_id = #{userId}
-          AND (
-            (type = 'PHONE' AND phone = #{target})
-                OR
-            (type = 'EMAIL' AND email = #{target})
-            )
+          AND target = #{target}
           AND type = #{type}
           AND expire_time > NOW()
         ORDER BY create_time DESC

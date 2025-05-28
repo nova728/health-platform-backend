@@ -1,6 +1,7 @@
 com\health\healthplatform\controller\DietRecord\DietRecordController.class
 com\health\healthplatform\config\FatSecretConfig.class
 com\health\healthplatform\config\OSSConfig.class
+com\health\healthplatform\service\SmsService.class
 com\health\healthplatform\entity\User.class
 com\health\healthplatform\controller\ArticleController.class
 com\health\healthplatform\DTO\HealthReport\HealthReportDTO$HealthReportDTOBuilder.class
@@ -100,6 +101,7 @@ com\health\healthplatform\service\DietRecord\DietRecordService.class
 com\health\healthplatform\config\SecurityConfig.class
 com\health\healthplatform\mapper\VerificationCodeMapper.class
 com\health\healthplatform\controller\DietRecord\FoodController.class
+com\health\healthplatform\service\impl\EmailServiceImpl.class
 com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO$Food.class
 com\health\healthplatform\config\ErnieBotConfig.class
 com\health\healthplatform\mapper\DietRecord\MealRecordMapper.class
@@ -117,10 +119,12 @@ com\health\healthplatform\DTO\BmiCategoryDTO.class
 com\health\healthplatform\entity\healthdata\BloodPressureHistory.class
 com\health\healthplatform\handler\StringListTypeHandler$1.class
 com\health\healthplatform\service\HealthReport\HealthReportService.class
+com\health\healthplatform\service\impl\VerificationCodeServiceImpl.class
 com\health\healthplatform\service\HealthReport\HealthReportService$2.class
 com\health\healthplatform\DTO\WeeklyStats$WeeklyStatsBuilder.class
 com\health\healthplatform\controller\HealthReportController.class
 com\health\healthplatform\mapper\health_data\ExerciseRecordMapper.class
+com\health\healthplatform\service\HealthReport\HealthDataSyncService.class
 com\health\healthplatform\config\CorsConfig.class
 com\health\healthplatform\config\MyBatisPlusConfig.class
 com\health\healthplatform\mapper\health_data\SleepHistoryMapper.class

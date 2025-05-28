@@ -102,14 +102,13 @@ public class HealthReportService {
             dto.setBmiStatus(report.getBmiStatus());
             dto.setWeight(report.getWeight());
             dto.setHeight(report.getHeight());
-            
-            // 复制血压指标
-            dto.setSystolic(report.getSystolic());
-            dto.setDiastolic(report.getDiastolic());
+              // 复制血压指标
+            dto.setSystolic(report.getSystolic() != null ? report.getSystolic().doubleValue() : null);
+            dto.setDiastolic(report.getDiastolic() != null ? report.getDiastolic().doubleValue() : null);
             dto.setBloodPressureStatus(report.getBloodPressureStatus());
             
             // 复制心率指标
-            dto.setHeartRate(report.getHeartRate());
+            dto.setHeartRate(report.getHeartRate() != null ? report.getHeartRate().doubleValue() : null);
             dto.setHeartRateStatus(report.getHeartRateStatus());
             
             // 复制运动指标

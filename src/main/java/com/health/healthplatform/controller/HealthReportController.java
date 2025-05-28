@@ -1,8 +1,11 @@
 package com.health.healthplatform.controller;
 
 import com.health.healthplatform.DTO.*;
+import com.health.healthplatform.entity.HealthReport.HealthReport;
 import com.health.healthplatform.result.Result;
 import com.health.healthplatform.service.health_data.*;
+import com.health.healthplatform.service.HealthReport.HealthReportAnalysisService;
+import com.health.healthplatform.service.HealthReport.HealthDataSyncService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +27,12 @@ public class HealthReportController {
     @Resource
     private WeightService weightService;
     @Resource
-    private ExerciseRecordService exerciseRecordService;
-    @Resource
+    private ExerciseRecordService exerciseRecordService;    @Resource
     private BmiService bmiService;
+    @Resource
+    private HealthReportAnalysisService healthReportAnalysisService;
+    @Resource
+    private HealthDataSyncService healthDataSyncService;
 
     @GetMapping("/{userId}/score")
     public Result getHealthScore(@PathVariable Integer userId) {
@@ -119,6 +125,194 @@ public class HealthReportController {
         } catch (Exception e) {
             log.error("Failed to get trend data: ", e);
             return Result.failure(500, "获取趋势数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 生成完整的健康报告
+     * @param userId 用户ID
+     * @return 健康报告
+     */
+    @PostMapping("/{userId}/generate-report")
+    public Result generateHealthReport(@PathVariable Integer userId) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Result.failure(400, "无效的用户ID");
+            }
+
+            HealthReport report = healthReportAnalysisService.generateHealthReport(userId);
+            
+            if (report == null) {
+                return Result.failure(400, "用户健康数据不足，无法生成报告");
+            }
+
+            return Result.success(report);
+        } catch (Exception e) {
+            log.error("生成健康报告失败: ", e);
+            return Result.failure(500, "生成健康报告失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取用户最新的健康报告
+     * @param userId 用户ID
+     * @return 最新的健康报告
+     */
+    @GetMapping("/{userId}/latest")
+    public Result getLatestReport(@PathVariable Integer userId) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Result.failure(400, "无效的用户ID");
+            }
+
+            HealthReport report = healthReportAnalysisService.getLatestReport(userId);
+            
+            if (report == null) {
+                return Result.failure(404, "未找到健康报告");
+            }
+
+            return Result.success(report);
+        } catch (Exception e) {
+            log.error("获取最新健康报告失败: ", e);
+            return Result.failure(500, "获取最新健康报告失败：" + e.getMessage());
+        }
+    }    /**
+     * 获取用户健康报告历史
+     * @param userId 用户ID
+     * @param startDate 开始日期（ISO格式字符串）
+     * @param endDate 结束日期（ISO格式字符串）
+     * @return 健康报告历史列表
+     */
+    @GetMapping("/{userId}/history")
+    public Result getReportHistory(
+            @PathVariable Integer userId,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Result.failure(400, "无效的用户ID");
+            }
+
+            // 将ISO字符串转换为Date对象
+            Date start = java.util.Date.from(java.time.Instant.parse(startDate));
+            Date end = java.util.Date.from(java.time.Instant.parse(endDate));
+
+            List<HealthReport> reports = healthReportAnalysisService.getReportHistory(userId, start, end);
+            
+            return Result.success(reports);
+        } catch (Exception e) {
+            log.error("获取健康报告历史失败: ", e);
+            return Result.failure(500, "获取健康报告历史失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 同步用户健康数据
+     * @param userId 用户ID
+     * @return 同步结果
+     */
+    @PostMapping("/{userId}/sync")
+    public Result syncHealthData(@PathVariable Integer userId) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Result.failure(400, "无效的用户ID");
+            }
+
+            // 同步数据
+            healthDataSyncService.syncUserData(userId);
+
+            return Result.success("健康数据同步成功");
+        } catch (Exception e) {
+            log.error("同步健康数据失败: ", e);
+            return Result.failure(500, "同步健康数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 同步指定日期的健康数据
+     * @param userId 用户ID
+     * @param reportDate 报告日期（YYYY-MM-DD格式）
+     * @return 同步结果
+     */
+    @PostMapping("/{userId}/sync/{reportDate}")
+    public Result syncHealthDataByDate(
+            @PathVariable Integer userId,
+            @PathVariable String reportDate) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Result.failure(400, "无效的用户ID");
+            }
+
+            LocalDate date = LocalDate.parse(reportDate);
+            healthDataSyncService.syncHealthDataToReport(userId, date);
+
+            return Result.success("指定日期的健康数据同步成功");
+        } catch (Exception e) {
+            log.error("同步指定日期的健康数据失败: ", e);
+            return Result.failure(500, "同步指定日期的健康数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 手动触发全局数据同步（管理员功能）
+     * @return 同步结果
+     */
+    @PostMapping("/admin/sync-all")
+    public Result syncAllHealthData() {
+        try {
+            // 触发昨天的数据同步
+            healthDataSyncService.autoSyncHealthData();
+            return Result.success("全局健康数据同步成功");
+        } catch (Exception e) {
+            log.error("全局健康数据同步失败: ", e);
+            return Result.failure(500, "全局健康数据同步失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 测试数据同步功能 - 开发环境使用
+     * @return 同步结果
+     */
+    @PostMapping("/test/sync-test-data")
+    public Result syncTestData() {
+        try {
+            log.info("开始测试数据同步功能");
+            
+            // 同步用户1最近几天的数据
+            LocalDate today = LocalDate.now();
+            for (int i = 0; i < 5; i++) {
+                LocalDate date = today.minusDays(i);
+                try {
+                    healthDataSyncService.syncHealthDataToReport(1, date);
+                    log.info("同步用户1在{}的数据完成", date);
+                } catch (Exception e) {
+                    log.warn("同步用户1在{}的数据失败: {}", date, e.getMessage());
+                }
+            }
+            
+            return Result.success("测试数据同步完成");
+        } catch (Exception e) {
+            log.error("测试数据同步失败: ", e);
+            return Result.failure(500, "测试数据同步失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取健康数据统计信息
+     * @return 统计信息
+     */
+    @GetMapping("/test/data-stats")
+    public Result getDataStats() {
+        try {
+            Map<String, Object> stats = new HashMap<>();
+            
+            // 这里可以添加一些统计查询
+            // 例如：获取health_data表和health_reports表的记录数量
+            
+            return Result.success(stats);
+        } catch (Exception e) {
+            log.error("获取数据统计失败: ", e);
+            return Result.failure(500, "获取数据统计失败：" + e.getMessage());
         }
     }
 

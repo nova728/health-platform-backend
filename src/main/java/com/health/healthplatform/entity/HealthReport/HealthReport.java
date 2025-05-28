@@ -17,9 +17,7 @@ public class HealthReport {
     private Double bmi;
     private String bmiStatus;  // 偏瘦、正常、超重、肥胖
     private Double weight;
-    private Double height;
-    
-    // 血压指标
+    private Double height;    // 血压指标
     private Double systolic;
     private Double diastolic;
     private String bloodPressureStatus;  // 低血压、正常、高血压
