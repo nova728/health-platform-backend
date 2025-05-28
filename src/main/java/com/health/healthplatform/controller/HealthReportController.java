@@ -269,53 +269,6 @@ public class HealthReportController {
         }
     }
 
-    /**
-     * 测试数据同步功能 - 开发环境使用
-     * @return 同步结果
-     */
-    @PostMapping("/test/sync-test-data")
-    public Result syncTestData() {
-        try {
-            log.info("开始测试数据同步功能");
-            
-            // 同步用户1最近几天的数据
-            LocalDate today = LocalDate.now();
-            for (int i = 0; i < 5; i++) {
-                LocalDate date = today.minusDays(i);
-                try {
-                    healthDataSyncService.syncHealthDataToReport(1, date);
-                    log.info("同步用户1在{}的数据完成", date);
-                } catch (Exception e) {
-                    log.warn("同步用户1在{}的数据失败: {}", date, e.getMessage());
-                }
-            }
-            
-            return Result.success("测试数据同步完成");
-        } catch (Exception e) {
-            log.error("测试数据同步失败: ", e);
-            return Result.failure(500, "测试数据同步失败：" + e.getMessage());
-        }
-    }
-
-    /**
-     * 获取健康数据统计信息
-     * @return 统计信息
-     */
-    @GetMapping("/test/data-stats")
-    public Result getDataStats() {
-        try {
-            Map<String, Object> stats = new HashMap<>();
-            
-            // 这里可以添加一些统计查询
-            // 例如：获取health_data表和health_reports表的记录数量
-            
-            return Result.success(stats);
-        } catch (Exception e) {
-            log.error("获取数据统计失败: ", e);
-            return Result.failure(500, "获取数据统计失败：" + e.getMessage());
-        }
-    }
-
     private Map<String, Object> calculateSubScores(Integer userId) {
         Map<String, Object> scores = new HashMap<>();
 
