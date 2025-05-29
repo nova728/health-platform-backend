@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.health.healthplatform.mapper.UserMapper" >
+    <resultMap id="result" type="com.health.healthplatform.entity.User">
+        <result property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="phone" column="phone" />
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
+    </resultMap>
+
+    <!--    通过用户名和密码查找对应用户，用于登录-->
+    <select id="findUserByNameAndPwd" resultMap="result" parameterType="com.health.healthplatform.entity.User">
+        select * from user
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <!--    通过用户ID查找对应用户-->
+    <select id="selectById" resultMap="result" parameterType="com.health.healthplatform.entity.User">
+        select * from user
+        where id = #{id}
+    </select>
+
+
+    <!--    通过用户名查找对应用户，用于注册检验用户名是否已存在-->
+    <select id="findUserByName" resultMap="result" parameterType="com.health.healthplatform.entity.User">
+        select * from user
+        where username = #{username}
+    </select>
+
+    <!--    添加用户-->
+    <insert id="addUser" parameterType="com.health.healthplatform.entity.User">
+        insert into user (username, phone, password)
+        values ( #{username}, #{phone}, #{password} )
+    </insert>
+
+    <!--添加用户头像-->
+    <update id="updateAvatar">
+        UPDATE user
+        SET avatar = #{avatarUrl}
+        WHERE id = #{userId}
+    </update>
+
+    <update id="updateUser" parameterType="com.health.healthplatform.entity.User">
+        UPDATE user
+        SET username = #{username},
+            gender = #{gender},
+            phone = #{phone},
+            email = #{email},
+            address = #{address}
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.healthplatform.mapper.MedicineMapper">
+    <resultMap id="MedicineMap" type="com.health.healthplatform.entity.Medicine">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="dosage" column="dosage"/>
+        <result property="frequency" column="frequency"/>
+        <result property="frequencyTiming" column="frequency_timing"
+                typeHandler="com.health.healthplatform.handler.StringListTypeHandler"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="notes" column="notes"/>
+        <result property="drugInfo" column="drug_info"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO medicines (
+            user_id, name, dosage, frequency, frequency_timing, start_date,
+            end_date, notes, drug_info, created_at, updated_at
+        ) VALUES (
+                     #{userId}, #{name}, #{dosage}, #{frequency},
+                     #{frequencyTiming,typeHandler=com.health.healthplatform.handler.StringListTypeHandler},
+                     #{startDate}, #{endDate}, #{notes}, #{drugInfo}, NOW(), NOW()
+                 )
+    </insert>
+
+    <update id="update">
+        UPDATE medicines
+        SET name = #{name},
+            dosage = #{dosage},
+            frequency = #{frequency},
+            frequency_timing = #{frequencyTiming,typeHandler=com.health.healthplatform.handler.StringListTypeHandler},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            notes = #{notes},
+            drug_info = #{drugInfo},
+            updated_at = NOW()
+        WHERE id = #{id} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM medicines WHERE id = #{id} AND user_id = #{userId}
+    </delete>
+
+    <select id="selectByIdAndUserId" resultMap="MedicineMap">
+        SELECT * FROM medicines
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+    <select id="selectByUserIdAndTimeRange" resultMap="MedicineMap">
+        SELECT * FROM medicines
+        WHERE user_id = #{userId}
+        <if test="startTime != null">
+            AND created_at >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND created_at &lt;= #{endTime}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+</mapper>
