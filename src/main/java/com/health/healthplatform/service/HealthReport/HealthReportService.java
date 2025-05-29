@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.Resource;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -131,21 +132,70 @@ public class HealthReportService {
             
             // 复制评分和建议
             dto.setOverallScore(report.getOverallScore());
-            
-            // 转换JSON字符串为List
-            dto.setHealthSuggestions(
-                objectMapper.readValue(report.getHealthSuggestions(), 
-                    new TypeReference<List<String>>() {})
-            );
-            dto.setAbnormalIndicators(
-                objectMapper.readValue(report.getAbnormalIndicators(), 
-                    new TypeReference<List<String>>() {})
-            );
+              // 转换JSON字符串为List，处理格式错误的JSON
+            dto.setHealthSuggestions(parseJsonStringList(report.getHealthSuggestions()));
+            dto.setAbnormalIndicators(parseJsonStringList(report.getAbnormalIndicators()));
             
             return dto;
         } catch (Exception e) {
             log.error("转换健康报告DTO时发生错误", e);
             throw new RuntimeException("转换健康报告失败", e);
         }
+    }
+
+    /**
+     * 解析JSON字符串为字符串列表，处理格式错误的JSON
+     * @param jsonString JSON字符串
+     * @return 字符串列表
+     */
+    private List<String> parseJsonStringList(String jsonString) {
+        if (jsonString == null || jsonString.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        try {
+            // 先尝试直接解析
+            return objectMapper.readValue(jsonString, new TypeReference<List<String>>() {});
+        } catch (Exception e) {
+            log.warn("JSON格式错误，尝试修复: {}", jsonString);
+            
+            // 修复常见的JSON格式错误
+            String fixedJson = fixJsonFormat(jsonString);
+            
+            try {
+                return objectMapper.readValue(fixedJson, new TypeReference<List<String>>() {});
+            } catch (Exception ex) {
+                log.error("修复JSON失败，返回空列表. 原始JSON: {}", jsonString, ex);
+                return new ArrayList<>();
+            }
+        }
+    }
+    
+    /**
+     * 修复JSON格式错误
+     * @param jsonString 原始JSON字符串
+     * @return 修复后的JSON字符串
+     */
+    private String fixJsonFormat(String jsonString) {
+        String trimmed = jsonString.trim();
+        
+        // 如果不是以[开头，添加[
+        if (!trimmed.startsWith("[")) {
+            trimmed = "[" + trimmed;
+        }
+        
+        // 如果不是以]结尾，添加]
+        if (!trimmed.endsWith("]")) {
+            trimmed = trimmed + "]";
+        }
+        
+        // 移除最后一个逗号后紧跟]的情况 (例如: ["a","b",])
+        trimmed = trimmed.replaceAll(",\\s*]", "]");
+        
+        // 移除多余的逗号
+        trimmed = trimmed.replaceAll(",{2,}", ",");
+        
+        log.info("修复后的JSON: {}", trimmed);
+        return trimmed;
     }
 }

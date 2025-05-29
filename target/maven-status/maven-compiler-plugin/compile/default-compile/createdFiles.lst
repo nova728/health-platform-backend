@@ -9,7 +9,9 @@ com\health\healthplatform\result\R.class
 com\health\healthplatform\service\health_data\StepsService.class
 com\health\healthplatform\service\HealthReport\HealthDataCollectorService.class
 com\health\healthplatform\controller\FileController.class
+com\health\healthplatform\DTO\deepseek\DeepSeekRequest$Message.class
 com\health\healthplatform\entity\MedicineReminder.class
+com\health\healthplatform\service\UserSettingsService.class
 com\health\healthplatform\DTO\ChatRequest.class
 com\health\healthplatform\DTO\BmiDTO.class
 com\health\healthplatform\entity\DietRecord\NutritionSummary.class
@@ -19,9 +21,11 @@ com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO$Results.class
 com\health\healthplatform\DTO\HeartRateDTO.class
 com\health\healthplatform\service\ChatService.class
 com\health\healthplatform\result\Result.class
+com\health\healthplatform\DTO\deepseek\DeepSeekResponse.class
 com\health\healthplatform\entity\VerificationCode.class
 com\health\healthplatform\mapper\SettingMapper.class
 com\health\healthplatform\controller\HealthReport\UserHealthReportController.class
+com\health\healthplatform\config\DeepSeekConfig.class
 com\health\healthplatform\controller\GenerateReportRequest.class
 com\health\healthplatform\DTO\BloodPressureDTO.class
 com\health\healthplatform\service\health_data\BloodPressureService.class
@@ -51,6 +55,7 @@ com\health\healthplatform\service\MedicineService.class
 com\health\healthplatform\service\OAuth2Service.class
 com\health\healthplatform\controller\ArticleFeatureController.class
 com\health\healthplatform\DTO\ExerciseRecordDTO.class
+com\health\healthplatform\service\DeepSeekService.class
 com\health\healthplatform\service\HealthReport\HealthReportService$1.class
 com\health\healthplatform\service\ExerciseAchievementService.class
 com\health\healthplatform\service\health_data\WeightService.class
@@ -80,14 +85,17 @@ com\health\healthplatform\service\impl\UserServiceImpl.class
 com\health\healthplatform\mapper\ArticleMapper.class
 com\health\healthplatform\controller\MedicineController.class
 com\health\healthplatform\controller\NotificationController.class
+com\health\healthplatform\DTO\deepseek\DeepSeekResponse$Message.class
 com\health\healthplatform\mapper\health_data\WeightHistoryMapper.class
 com\health\healthplatform\service\health_data\HealthDataService.class
 com\health\healthplatform\controller\ReminderStatusRequest.class
 com\health\healthplatform\enums\MealType.class
 com\health\healthplatform\entity\healthdata\BmiHistory.class
+com\health\healthplatform\service\impl\UserSettingsServiceImpl.class
 com\health\healthplatform\config\WebSocketConfig.class
 com\health\healthplatform\entity\healthdata\StepsHistory.class
 com\health\healthplatform\entity\UserSettings.class
+com\health\healthplatform\DTO\deepseek\DeepSeekResponse$Usage.class
 com\health\healthplatform\service\UserService.class
 com\health\healthplatform\DTO\DietRecord\DailyNutritionDTO.class
 com\health\healthplatform\util\BaseUserInfo.class
@@ -113,8 +121,10 @@ com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO$Serving.class
 com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO$Servings.class
 com\health\healthplatform\HealthplatformApplication.class
 com\health\healthplatform\mapper\health_data\BmiHistoryMapper.class
+com\health\healthplatform\DTO\deepseek\DeepSeekRequest.class
 com\health\healthplatform\controller\DietRecord\NutritionStatsController.class
 com\health\healthplatform\entity\Notification.class
+com\health\healthplatform\controller\UserProfileController.class
 com\health\healthplatform\DTO\BmiCategoryDTO.class
 com\health\healthplatform\entity\healthdata\BloodPressureHistory.class
 com\health\healthplatform\handler\StringListTypeHandler$1.class
@@ -123,6 +133,7 @@ com\health\healthplatform\service\impl\VerificationCodeServiceImpl.class
 com\health\healthplatform\service\HealthReport\HealthReportService$2.class
 com\health\healthplatform\DTO\WeeklyStats$WeeklyStatsBuilder.class
 com\health\healthplatform\controller\HealthReportController.class
+com\health\healthplatform\service\IntelligentAnalysisService.class
 com\health\healthplatform\mapper\health_data\ExerciseRecordMapper.class
 com\health\healthplatform\service\HealthReport\HealthDataSyncService.class
 com\health\healthplatform\config\CorsConfig.class
@@ -131,6 +142,7 @@ com\health\healthplatform\mapper\health_data\SleepHistoryMapper.class
 com\health\healthplatform\entity\healthdata\WeightHistory.class
 com\health\healthplatform\service\health_data\HeightService.class
 com\health\healthplatform\controller\ExerciseAchievementController.class
+com\health\healthplatform\DTO\deepseek\DeepSeekResponse$Choice.class
 com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO$FoodsSearch.class
 com\health\healthplatform\mapper\HealthReport\HealthReportMapper.class
 com\health\healthplatform\converter\HealthReportConverter.class
@@ -142,6 +154,7 @@ com\health\healthplatform\DTO\HeightDTO.class
 com\health\healthplatform\entity\healthdata\SleepHistory.class
 com\health\healthplatform\service\HealthReport\HealthReportAnalysisService.class
 com\health\healthplatform\service\health_data\HeartRateService.class
+com\health\healthplatform\controller\AIAnalysisController.class
 com\health\healthplatform\service\health_data\SleepService.class
 com\health\healthplatform\controller\UserController.class
 com\health\healthplatform\DTO\DietRecord\NutritionSummaryDTO.class
@@ -149,6 +162,7 @@ com\health\healthplatform\entity\Comment.class
 com\health\healthplatform\vo\HealthDataVO.class
 com\health\healthplatform\mapper\MedicineMapper.class
 com\health\healthplatform\service\VerificationCodeService.class
+com\health\healthplatform\mapper\UserSettingsMapper.class
 com\health\healthplatform\DTO\AchievementDTO.class
 com\health\healthplatform\mapper\health_data\BloodPressureHistoryMapper.class
 com\health\healthplatform\DTO\StepsDTO.class
