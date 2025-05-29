@@ -4,7 +4,6 @@ import com.health.healthplatform.entity.User;
 import com.health.healthplatform.mapper.UserMapper;
 import com.health.healthplatform.service.UserService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +25,11 @@ public class UserServiceImpl implements UserService {
 
     public User selectById(Integer integer){
         return userMapper.selectById(integer);
+    }
+    
+    @Override
+    public User getById(Integer userId) {
+        return userMapper.selectById(userId);
     }
 
     //     添加用户
@@ -51,6 +55,15 @@ public class UserServiceImpl implements UserService {
 
     public void updateAvatar(Integer userId, String avatarUrl) {
         userMapper.updateAvatar(userId, avatarUrl);
+    }
+    
+    @Override
+    public Integer getArticleCount(Integer userId) {
+        return userMapper.getArticleCount(userId);
+    }
+    
+    @Override
+    public Integer getTotalLikes(Integer userId) {        return userMapper.getTotalLikes(userId);
     }
 
 }

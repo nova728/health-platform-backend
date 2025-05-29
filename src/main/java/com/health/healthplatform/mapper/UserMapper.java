@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+
 @Mapper
 public interface UserMapper {
     public User selectById(Integer integer);
@@ -21,4 +23,12 @@ public interface UserMapper {
 
     @Select("SELECT COUNT(*) FROM user")
     int countUsers();
+      // 获取用户发表的文章数量
+    @Select("SELECT COUNT(*) FROM articles WHERE user_id = #{userId}")
+    Integer getArticleCount(@Param("userId") Integer userId);
+    
+    // 获取用户获得的总点赞数
+    @Select("SELECT COALESCE(SUM(like_count), 0) FROM articles WHERE user_id = #{userId}")
+    Integer getTotalLikes(@Param("userId") Integer userId);    @Select("SELECT CREATE_TIME FROM user WHERE id = #{userId}")
+    LocalDateTime getCreateTime(@Param("userId") Integer userId);
 }
