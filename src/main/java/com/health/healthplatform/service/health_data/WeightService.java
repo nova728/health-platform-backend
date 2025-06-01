@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -66,31 +65,31 @@ public class WeightService {
         WeightDTO dto = new WeightDTO();
         BeanUtils.copyProperties(entity, dto);
         return dto;
-    }    public WeightDTO recordWeight(Integer userId, Double weight) {
+    }
+
+    public WeightDTO recordWeight(Integer userId, Double weight) {
         log.info("Recording weight {} for user {}", weight, userId);
 
         validateWeight(weight);
 
-        // 先获取最新的身高记录
-        HealthData healthData = healthDataMapper.findByUserId(userId);
-        Double height = healthData != null && healthData.getHeight() != null ? 
-                        healthData.getHeight() : 0.0; // 如果没有身高记录，默认设置为0
-
-        // 计算BMI
-        double bmi = 0.0;
-        if (height > 0) {
-            double heightM = height / 100.0;
-            bmi = Math.round((weight / (heightM * heightM)) * 10) / 10.0;
-        }
-
         WeightHistory weightHistory = new WeightHistory();
         weightHistory.setUserId(userId);
         weightHistory.setWeight(weight);
-        weightHistory.setHeight(height); // 设置身高字段
-        weightHistory.setBmi(bmi); // 设置BMI字段
         weightHistory.setMeasurementTime(LocalDateTime.now());
         weightHistory.setCreateTime(LocalDateTime.now());
         weightHistory.setUpdateTime(LocalDateTime.now());
+
+        // 获取用户身高数据并计算BMI
+        HealthData healthData = healthDataMapper.findByUserId(userId);
+        if (healthData != null && healthData.getHeight() != null) {
+            Double height = healthData.getHeight();
+            weightHistory.setHeight(height);
+
+            // 计算BMI
+            double heightM = height / 100.0;
+            double bmi = Math.round((weight / (heightM * heightM)) * 10) / 10.0;
+            weightHistory.setBmi(bmi);
+        }
 
         weightHistoryMapper.insert(weightHistory);
         log.info("Successfully recorded weight with id: {}", weightHistory.getId());
@@ -104,35 +103,20 @@ public class WeightService {
     private void updateHealthDataAndBmi(Integer userId, Double weight) {
         try {
             HealthData healthData = healthDataMapper.findByUserId(userId);
-
-            if (healthData == null) {
-                // 如果用户没有健康数据记录，创建一个新记录
-                healthData = new HealthData();
-                healthData.setUserId(Long.valueOf(userId));
-                healthData.setWeight(weight);
-                healthData.setRecordDate(LocalDate.now());
-                healthData.setCreateTime(LocalDateTime.now());
-                healthData.setUpdateTime(LocalDateTime.now());
-                healthDataMapper.insert(healthData);
-                log.info("Created new health data record for user: {}", userId);
-            } else {
-                // 如果用户有健康数据记录，更新体重数据
-                if (healthData.getHeight() != null) {
-                    // 有身高数据时自动计算BMI
-                    double heightM = healthData.getHeight() / 100.0;
-                    double bmi = Math.round((weight / (heightM * heightM)) * 10) / 10.0;
-                    bmiService.recordBmi(userId, bmi, weight, healthData.getHeight());
-                }
-
-                // 更新体重数据
-                UpdateWrapper<HealthData> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("user_id", userId)
-                        .set("weight", weight)
-                        .set("update_time", LocalDateTime.now());
-                healthDataMapper.update(null, updateWrapper);
+            if (healthData != null && healthData.getHeight() != null) {
+                // 有身高数据时自动计算BMI
+                double heightM = healthData.getHeight() / 100.0;
+                double bmi = Math.round((weight / (heightM * heightM)) * 10) / 10.0;
+                bmiService.recordBmi(userId, bmi, weight, healthData.getHeight());
             }
+            // 更新体重数据
+            UpdateWrapper<HealthData> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("user_id", userId)
+                    .set("weight", weight)
+                    .set("update_time", LocalDateTime.now());
+            healthDataMapper.update(null, updateWrapper);
         } catch (Exception e) {
-            log.error("Error updating health data and BMI: {}", e.getMessage(), e);
+            log.error("Error updating health data and BMI: {}", e.getMessage());
         }
     }
 

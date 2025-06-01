@@ -11,6 +11,8 @@ public class WeightHistory {
     private Long id;
     private Integer userId;
     private Double weight;
+    private Double height;
+    private Double bmi;
     private LocalDateTime measurementTime;
 
     @TableField(fill = FieldFill.INSERT)
