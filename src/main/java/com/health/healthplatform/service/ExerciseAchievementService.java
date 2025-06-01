@@ -122,7 +122,7 @@ public class ExerciseAchievementService {
             case "游泳健将" -> "Ship";
             case "骑行先锋" -> "Bicycle";
             case "健身达人" -> "User";
-            case "瑜伽大师" -> "Magic";
+            case "瑜伽大师" -> "Star";
             case "运动达人" -> "Trophy";
             default -> "Medal";
         };
