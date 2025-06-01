@@ -8,7 +8,5 @@ public class WeightDTO {
     private Long id;
     private Integer userId;
     private Double weight;
-    private Double height;
-    private Double bmi;
     private LocalDateTime measurementTime;
 }
