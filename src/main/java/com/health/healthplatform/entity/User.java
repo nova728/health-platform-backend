@@ -28,4 +28,9 @@ public class User {
 
     @TableField(exist = false)
     private String token;
+
+
+    public CharSequence getPhone() {
+        return this.phone;
+    }
 }

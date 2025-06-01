@@ -1,10 +1,12 @@
 package com.health.healthplatform.service.DietRecord;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.health.healthplatform.DTO.DietRecord.FoodRecognitionDTO;
 import com.health.healthplatform.DTO.DietRecord.MealRecordDTO;
 import com.health.healthplatform.DTO.DietRecord.NutritionSummaryDTO;
 import com.health.healthplatform.entity.DietRecord.NutritionSummary;
 import com.health.healthplatform.entity.DietRecord.MealRecord;
+import com.health.healthplatform.enums.MealType;
 import com.health.healthplatform.mapper.DietRecord.MealRecordMapper;
 import com.health.healthplatform.mapper.DietRecord.NutritionSummaryMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -149,5 +151,22 @@ public class DietRecordService {
         dto.calculatePercentages();
         log.info("NutritionSummaryDTO 构建完成，包含 {} 条餐食记录", dto.getMeals().size());
         return dto;
+    }
+
+    public MealRecordDTO createMealFromRecognition(FoodRecognitionDTO recognition,
+                                                   MealType mealType,
+                                                   Double servingAmount) {
+        MealRecordDTO meal = new MealRecordDTO();
+        meal.setMealType(mealType);
+        meal.setFoodName(recognition.getName());
+        meal.setCalories(recognition.getCalorie());
+
+        meal.setCarbs(recognition.getCalorie() * 0.5 / 4); // 假设50%热量来自碳水
+        meal.setProtein(recognition.getCalorie() * 0.3 / 4); // 30%来自蛋白质
+        meal.setFat(recognition.getCalorie() * 0.2 / 9); // 20%来自脂肪
+        meal.setServingAmount(servingAmount);
+        meal.setServingUnit("g");
+
+        return meal;
     }
 }

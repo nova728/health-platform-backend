@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -31,4 +32,7 @@ public interface UserMapper {
     @Select("SELECT COALESCE(SUM(like_count), 0) FROM articles WHERE user_id = #{userId}")
     Integer getTotalLikes(@Param("userId") Integer userId);    @Select("SELECT CREATE_TIME FROM user WHERE id = #{userId}")
     LocalDateTime getCreateTime(@Param("userId") Integer userId);
+
+    @Select("SELECT id FROM user")
+    List<Integer> getAllUserIds();
 }

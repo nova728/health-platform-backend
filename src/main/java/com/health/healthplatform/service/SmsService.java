@@ -27,6 +27,9 @@ public class SmsService {
     @Value("${aliyun.sms.template-code}")
     private String templateCode;
 
+    @Value("${aliyun.sms.health-report-template-code}")
+    private String healthReportTemplateCode;
+
     /**
      * 创建阿里云短信客户端
      * @return Client
@@ -109,6 +112,34 @@ public class SmsService {
         // 中国大陆手机号验证正则表达式
         String regex = "^1[3-9]\\d{9}$";
         return phoneNumber.matches(regex);
+    }
+
+    public boolean sendWeeklyReport(String phoneNumber, Object reportContent) {
+        log.info("发送健康周报 - 手机号: {}", phoneNumber);
+
+        try {
+            Client client = createClient();
+            String templateParam = "{\"content\":\"" + reportContent + "\"}";
+
+            SendSmsRequest request = new SendSmsRequest()
+                    .setPhoneNumbers(phoneNumber)
+                    .setSignName(signName)
+                    .setTemplateCode(healthReportTemplateCode)
+                    .setTemplateParam(templateParam);
+
+            SendSmsResponse response = client.sendSms(request);
+
+            if ("OK".equals(response.getBody().getCode())) {
+                log.info("健康周报发送成功 - 手机号: {}", phoneNumber);
+                return true;
+            } else {
+                log.error("健康周报发送失败 - 错误码: {}", response.getBody().getCode());
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("健康周报发送异常", e);
+            return false;
+        }
     }
 
     /**

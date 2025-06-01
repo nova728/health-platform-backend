@@ -25,4 +25,8 @@ public class UserSettings {
     // 创建时间和更新时间
     private String createTime;
     private String updateTime;
+
+    public Boolean getSystemNotification() {
+        return this.systemNotification;
+    }
 }
