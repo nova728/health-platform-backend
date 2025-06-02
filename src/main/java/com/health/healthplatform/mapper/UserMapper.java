@@ -31,4 +31,12 @@ public interface UserMapper {
     @Select("SELECT COALESCE(SUM(like_count), 0) FROM articles WHERE user_id = #{userId}")
     Integer getTotalLikes(@Param("userId") Integer userId);    @Select("SELECT CREATE_TIME FROM user WHERE id = #{userId}")
     LocalDateTime getCreateTime(@Param("userId") Integer userId);
+    
+    // 获取所有用户ID
+    @Select("SELECT id FROM user")
+    java.util.List<Integer> getAllUserIds();
+    
+    // 根据用户ID获取手机号
+    @Select("SELECT phone FROM user WHERE id = #{userId}")
+    String findPhoneNumberById(@Param("userId") Integer userId);
 }

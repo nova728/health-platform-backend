@@ -1,8 +1,11 @@
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\UserSettings.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\FoodRecognitionResponseDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\result\Result.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\DietRecord\DietGoalService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\HealthReport\HealthReportService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\UserArticleController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\impl\NotificationServiceImpl.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\FoodRecognitionDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\converter\HealthReportConverter.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\AchievementDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\config\CorsConfig.java
@@ -45,6 +48,7 @@ E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\health
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\ExerciseAchievementService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\impl\EmailServiceImpl.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\DietRecord\FoodSearchService.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\WeeklyReportService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\Category.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\HealthReport\HealthReportMapper.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\FoodSearchResponseDTO.java
@@ -61,6 +65,7 @@ E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\UserA
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\config\WebSocketConfig.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\HealthplatformApplication.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\UserRankDTO.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\DietGoal.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\VerificationCodeMapper.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\enums\MealType.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\CategoryMapper.java
@@ -71,6 +76,7 @@ E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\health
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\IntelligentAnalysisService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\UserController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\deepseek\DeepSeekRequest.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\DietRecord\FoodImageRecognitionService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\health_data\HeartRateService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\health_data\WeightHistoryMapper.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\health_data\HealthDataMapper.java
@@ -128,6 +134,7 @@ E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\impl\
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\DietRecord\FoodController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\NotificationService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\MedicineReminder.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\DietGoalMapper.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\healthdata\BloodPressureHistory.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\ExerciseAchievementController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\Comment.java
@@ -140,12 +147,14 @@ E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\healt
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\ExerciseGoalDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\mapper\health_data\ExerciseRecordMapper.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\BmiDTO.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\DietGoalDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\StepsDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\BloodPressureDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\entity\Article.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\health_data\HeightService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\service\health_data\SleepService.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\MealRecordDTO.java
+E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\WeeklyReportController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\controller\ChatController.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\WeightDTO.java
 E:\grade3-2\healthplatform\src\main\java\com\health\healthplatform\DTO\DietRecord\NutritionStatsDTO.java
