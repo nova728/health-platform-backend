@@ -1,0 +1,67 @@
+# Spring Boot Configuration Example
+# Copy this file to application.properties and fill in your actual values
+
+# Server Configuration
+server.port=8088
+
+# Database Configuration
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/your_database?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=GMT%2B8
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+# MyBatis Plus Configuration
+mybatis-plus.mapper-locations=classpath:mapper/*.xml
+mybatis-plus.type-aliases-package=com.health.healthplatform.entity
+mybatis-plus.configuration.map-underscore-to-camel-case=true
+mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+
+# JWT Configuration
+jwt.secret=your_jwt_secret_key
+jwt.expiration=86400
+
+# File Upload Configuration
+file.upload-dir=uploads/
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+# Alibaba Cloud OSS Configuration
+alibaba.cloud.oss.endpoint=your_oss_endpoint
+alibaba.cloud.oss.access-key-id=your_access_key_id
+alibaba.cloud.oss.access-key-secret=your_access_key_secret
+alibaba.cloud.oss.bucket-name=your_bucket_name
+
+# DeepSeek API Configuration
+deepseek.api.key=your_deepseek_api_key
+deepseek.api.url=https://api.deepseek.com
+
+# FatSecret API Configuration
+fatsecret.consumer.key=your_fatsecret_consumer_key
+fatsecret.consumer.secret=your_fatsecret_consumer_secret
+
+# TianAPI Configuration (for food recognition)
+tianapi.key=your_tianapi_key
+
+# Email Configuration
+spring.mail.host=smtp.qq.com
+spring.mail.port=587
+spring.mail.username=your_email@qq.com
+spring.mail.password=your_email_authorization_code
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+
+# Alibaba Cloud SMS Configuration
+aliyun.sms.access-key-id=your_aliyun_access_key_id
+aliyun.sms.access-key-secret=your_aliyun_access_key_secret
+aliyun.sms.sign-name=your_sms_sign_name
+aliyun.sms.template-code=your_verification_template_code
+aliyun.sms.health-report-template-code=your_health_report_template_code
+
+# Logging Configuration
+logging.level.com.health.healthplatform=DEBUG
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n
+
+# Jackson Configuration
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=GMT+8

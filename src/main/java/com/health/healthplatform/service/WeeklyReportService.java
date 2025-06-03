@@ -10,20 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
-public class WeeklyReportService {
-
-    @Autowired
+public class WeeklyReportService {    @Autowired
     private SmsService smsService;
 
     @Autowired
-    private UserSettingsMapper userSettingsMapper; // 新增
+    private UserSettingsMapper userSettingsMapper;
 
     @Autowired
-    private UserMapper userMapper; // 新增
+    private UserMapper userMapper;
 
+    @Autowired
     private AIAnalysisController aiAnalysisController;
 
     @SuppressWarnings("unused")
@@ -55,6 +58,46 @@ public class WeeklyReportService {
         if (smsService.isValidPhoneNumber(phoneNumber)) {
             smsService.sendWeeklyReport(phoneNumber, reportContent);
             log.info("健康周报已发送给用户: {}", userId);
+        }
+    }
+
+    /**
+     * 获取用户的周报设置
+     * @param userId 用户ID
+     * @return 周报设置信息
+     */
+    public Map<String, Object> getWeeklyReportSettings(Integer userId) {
+        Map<String, Object> settings = new HashMap<>();
+        
+        // 获取用户的系统通知设置
+        UserSettings userSettings = userSettingsMapper.selectByUserId(userId);
+        if (userSettings != null) {
+            settings.put("enabled", Boolean.TRUE.equals(userSettings.getSystemNotification()));
+        } else {
+            settings.put("enabled", false);
+        }
+        
+        // 设置默认的周报发送时间（目前是固定的）
+        settings.put("day", "1"); // 周一
+        settings.put("time", "09:00"); // 上午9点
+        
+        return settings;
+    }    /**
+     * 更新用户的周报设置
+     * @param userId 用户ID
+     * @param settings 周报设置
+     */
+    public void updateWeeklyReportSettings(Integer userId, Map<String, Object> settings) {
+        // 目前周报设置主要通过系统通知开关控制
+        // 这里可以记录日志，实际的开关在系统通知设置中
+        boolean enabled = Boolean.parseBoolean(settings.get("enabled").toString());
+        log.info("用户 {} 更新周报设置: enabled={}", userId, enabled);
+        
+        // 如果需要，可以在这里更新用户的系统通知设置
+        UserSettings existingSettings = userSettingsMapper.selectByUserId(userId);
+        if (existingSettings != null) {
+            existingSettings.setSystemNotification(enabled);
+            userSettingsMapper.updateByUserId(existingSettings);
         }
     }
 

@@ -7,35 +7,15 @@ import com.health.healthplatform.result.Result;
 import com.health.healthplatform.service.SettingService;
 import com.health.healthplatform.service.UserService;
 import com.health.healthplatform.service.VerificationCodeService;
+import com.health.healthplatform.service.EmailService;
+import com.health.healthplatform.service.SmsService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ObjectInputFilter;
 import java.util.HashMap;
 import java.util.Map;
-
-// 基础包
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.Service;
-import jakarta.annotation.Resource;
-
-// 阿里云短信相关
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
-import com.aliyun.teaopenapi.models.Config;
-
-// 邮件相关
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import jakarta.mail.internet.MimeMessage;
-
-// 项目内部类
-import com.health.healthplatform.entity.*;
-import com.health.healthplatform.service.*;
-import com.health.healthplatform.result.Result;
 
 @RestController
 @Slf4j
@@ -185,9 +165,7 @@ public class SettingController {
         } catch (Exception e) {
             return Result.failure(500, "隐私设置更新失败: " + e.getMessage());
         }
-    }
-
-    // 更新通用设置
+    }    // 更新通用设置
     @CrossOrigin
     @PutMapping("/{userId}/general")
     public Result updateGeneralSettings(
@@ -198,9 +176,10 @@ public class SettingController {
             settingService.updateGeneralSettings(settings);
             return Result.success("通用设置更新成功");
         } catch (Exception e) {
-            return Result.failure(500, "通用设置更新失败: " + e.getMessage());
-        }
-    }    // 发送手机验证码
+            return Result.failure(500, "通用设置更新失败: " + e.getMessage());        }
+    }
+
+    // 发送手机验证码
     @CrossOrigin
     @PostMapping("/{userId}/send-phone-code")
     public Result sendPhoneVerificationCode(

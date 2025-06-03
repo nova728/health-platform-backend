@@ -6,16 +6,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 @SpringBootApplication
+@EnableScheduling
 @ComponentScan(basePackages = {
 		"com.health.healthplatform.controller",
 		"com.health.healthplatform.service",
 		"com.health.healthplatform.config",
-		"com.health.healthplatform.websocket"  // 添加这个包路径
+		"com.health.healthplatform.websocket"  
 })
 @MapperScan("com.health.healthplatform.mapper")
 public class HealthplatformApplication {

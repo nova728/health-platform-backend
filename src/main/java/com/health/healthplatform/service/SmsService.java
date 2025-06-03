@@ -112,14 +112,26 @@ public class SmsService {
         // 中国大陆手机号验证正则表达式
         String regex = "^1[3-9]\\d{9}$";
         return phoneNumber.matches(regex);
-    }
-
-    public boolean sendWeeklyReport(String phoneNumber, Object reportContent) {
+    }    public boolean sendWeeklyReport(String phoneNumber, Object reportContent) {
         log.info("发送健康周报 - 手机号: {}", phoneNumber);
 
         try {
             Client client = createClient();
-            String templateParam = "{\"content\":\"" + reportContent + "\"}";
+              // 处理报告内容，限制长度以避免超出短信限制
+            String content = reportContent != null ? reportContent.toString() : "暂无数据";
+            String summarizedContent = summarizeHealthReport(content);
+            
+            log.info("原始报告长度: {}, 压缩后长度: {}", content.length(), summarizedContent.length());
+            
+            // 转义JSON特殊字符
+            String escapedContent = summarizedContent
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\t", "\\t");
+            
+            String templateParam = "{\"content\":\"" + escapedContent + "\"}";
 
             SendSmsRequest request = new SendSmsRequest()
                     .setPhoneNumbers(phoneNumber)
@@ -133,13 +145,46 @@ public class SmsService {
                 log.info("健康周报发送成功 - 手机号: {}", phoneNumber);
                 return true;
             } else {
-                log.error("健康周报发送失败 - 错误码: {}", response.getBody().getCode());
+                log.error("健康周报发送失败 - 错误码: {}, 错误信息: {}", 
+                    response.getBody().getCode(), response.getBody().getMessage());
                 return false;
             }
         } catch (Exception e) {
             log.error("健康周报发送异常", e);
             return false;
         }
+    }
+    
+    /**
+     * 压缩健康报告内容，适合短信发送
+     * @param content 原始报告内容
+     * @return 压缩后的内容
+     */
+    private String summarizeHealthReport(String content) {
+        if (content == null || content.isEmpty()) {
+            return "本周健康数据暂无，建议多记录健康数据以获得个性化建议。";
+        }
+        
+        // 移除多余的空白字符和换行符
+        content = content.replaceAll("\\s+", " ").trim();
+        
+        // 短信内容限制在 300 字以内（考虑到模板参数的限制）
+        final int MAX_LENGTH = 300;
+        
+        if (content.length() <= MAX_LENGTH) {
+            return content;
+        }
+        
+        // 截取前部分内容并添加省略号
+        String truncated = content.substring(0, MAX_LENGTH - 10);
+        
+        // 尝试在句号处截断，保持内容完整性
+        int lastPeriod = truncated.lastIndexOf("。");
+        if (lastPeriod > MAX_LENGTH / 2) {
+            truncated = truncated.substring(0, lastPeriod + 1);
+        }
+        
+        return truncated + "...查看完整报告请登录APP。";
     }
 
     /**
