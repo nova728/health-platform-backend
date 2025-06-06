@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/diet")
@@ -34,15 +33,6 @@ public class DietRecordController {
             @PathVariable Integer userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(dietRecordService.getDailyNutritionSummary(userId, date));
-    }
-
-    @GetMapping("/{userId}/meals/daily")
-    public ResponseEntity<List<MealRecordDTO>> getDailyMeals(
-            @PathVariable Integer userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("获取每日餐食记录，用户ID：{}，日期：{}", userId, date);
-        List<MealRecordDTO> meals = dietRecordService.getDailyMeals(userId, date);
-        return ResponseEntity.ok(meals);
     }
 
     @DeleteMapping("/{userId}/meals/{mealId}")

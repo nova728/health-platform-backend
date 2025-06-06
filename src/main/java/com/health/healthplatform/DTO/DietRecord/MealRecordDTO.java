@@ -1,6 +1,7 @@
 package com.health.healthplatform.DTO.DietRecord;
 
-import java.time.LocalDateTime;
+import java.security.PrivateKey;
+
 import com.health.healthplatform.enums.MealType;
 import lombok.Data;
 
@@ -18,5 +19,4 @@ public class MealRecordDTO {
     private Double carbs; // 碳水
     private Double protein; // 蛋白质
     private Double fat; // 脂肪
-    private LocalDateTime createTime; // 创建时间
 }

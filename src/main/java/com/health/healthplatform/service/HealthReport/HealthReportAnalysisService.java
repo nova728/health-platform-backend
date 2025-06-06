@@ -123,16 +123,14 @@ public class HealthReportAnalysisService {
 
     /**
      * 获取血压状态
-     */
+     */    
     private String getBloodPressureStatus(double systolic, double diastolic) {
         if (systolic < 90 || diastolic < 60) {
-            return "低血压";
-        } else if (systolic <= 120 && diastolic <= 80) {
-            return "正常";
-        } else if (systolic <= 140 && diastolic <= 90) {
-            return "偏高";
+            return "血压偏低";
+        } else if (systolic >= 140) {
+            return "血压偏高";
         } else {
-            return "高血压";
+            return "正常";
         }
     }    private void analyzeHeartRate(HealthMetrics metrics, HealthReport report) {
         List<String> abnormalIndicators = new ArrayList<>();

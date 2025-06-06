@@ -263,11 +263,11 @@ public class HealthDataSyncService {
      * 获取BMI状态
      */
     private String getBmiStatus(double bmi) {
-        if (bmi < 18.5) {
+        if (bmi <= 18.4) {
             return "偏瘦";
         } else if (bmi < 24) {
             return "正常";
-        } else if (bmi < 28) {
+        } else if (bmi <= 27.9) {
             return "超重";
         } else {
             return "肥胖";

@@ -116,42 +116,16 @@ public class DietRecordService {
         summary.setTotalFat(totalFat);
         nutritionSummaryMapper.updateById(summary);
     }
-      public NutritionSummaryDTO getDailyNutritionSummary(Integer userId, LocalDate date) { //供外部调用
+    
+    public NutritionSummaryDTO getDailyNutritionSummary(Integer userId, LocalDate date) { //供外部调用
         log.info("开始获取每日营养总结，用户ID：{}，日期：{}", userId, date);
         NutritionSummary summary = getNutritionSummary(userId, date);
         if (summary == null) {
             log.warn("未找到 NutritionSummary，可能存在问题");
-            throw new RuntimeException("无法获取营养总结数据");
         } else {
             log.info("成功获取 NutritionSummary，ID：{}", summary.getId());
         }
         return getNutritionSummaryDTO(summary.getId());
-    }
-    
-    public List<MealRecordDTO> getDailyMeals(Integer userId, LocalDate date) {
-        log.info("开始获取每日餐食记录，用户ID：{}，日期：{}", userId, date);
-        NutritionSummary summary = nutritionSummaryMapper.findByUserIdAndDate(userId, date);
-        
-        if (summary == null) {
-            log.info("未找到该日期的营养总结记录，返回空列表");
-            return new ArrayList<>();
-        }
-        
-        List<MealRecord> meals = mealRecordMapper.findByNutritionSummaryId(summary.getId());
-        if (meals == null) {
-            meals = new ArrayList<>();
-        }
-        
-        List<MealRecordDTO> mealDTOs = meals.stream()
-                .map(meal -> {
-                    MealRecordDTO mealDTO = new MealRecordDTO();
-                    BeanUtils.copyProperties(meal, mealDTO);
-                    return mealDTO;
-                })
-                .collect(Collectors.toList());
-                
-        log.info("成功获取每日餐食记录，共 {} 条", mealDTOs.size());
-        return mealDTOs;
     }
     
     private NutritionSummaryDTO getNutritionSummaryDTO(Long summaryId) {
