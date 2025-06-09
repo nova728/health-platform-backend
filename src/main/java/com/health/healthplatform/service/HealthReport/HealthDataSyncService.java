@@ -261,31 +261,28 @@ public class HealthDataSyncService {
 
     /**
      * 获取BMI状态
-     */
-    private String getBmiStatus(double bmi) {
+     */    private String getBmiStatus(double bmi) {
         if (bmi <= 18.4) {
             return "偏瘦";
-        } else if (bmi < 24) {
+        } else if (bmi < 24.0) {
             return "正常";
-        } else if (bmi <= 27.9) {
+        } else if (bmi >= 24.0 && bmi <= 27.9) {
             return "超重";
-        } else {
+        } else if (bmi >= 28.0) {
             return "肥胖";
         }
+        return "正常";
     }
 
     /**
      * 获取血压状态
-     */
-    private String getBloodPressureStatus(double systolic, double diastolic) {
+     */    private String getBloodPressureStatus(double systolic, double diastolic) {
         if (systolic < 90 || diastolic < 60) {
-            return "低血压";
-        } else if (systolic <= 120 && diastolic <= 80) {
-            return "正常";
-        } else if (systolic <= 140 && diastolic <= 90) {
-            return "偏高";
+            return "血压偏低";
+        } else if (systolic >= 140) {
+            return "血压偏高";
         } else {
-            return "高血压";
+            return "正常";
         }
     }
 

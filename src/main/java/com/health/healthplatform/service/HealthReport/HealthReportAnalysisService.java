@@ -68,25 +68,22 @@ public class HealthReportAnalysisService {
             log.error("分析健康数据时发生错误", e);
             throw new RuntimeException("健康数据分析失败: " + e.getMessage(), e);
         }
-    }
-
-    private void analyzeBmi(HealthMetrics metrics, HealthReport report) {
+    }    private void analyzeBmi(HealthMetrics metrics, HealthReport report) {
         List<String> abnormalIndicators = new ArrayList<>();
         
         if (metrics.getBmi() != null) {
             report.setBmi(metrics.getBmi());
             report.setWeight(metrics.getWeight());
             report.setHeight(metrics.getHeight());
-            
-            if (metrics.getBmi() < 18.5) {
+              if (metrics.getBmi() <= 18.4) {
                 report.setBmiStatus("偏瘦");
                 abnormalIndicators.add("体重偏轻");
-            } else if (metrics.getBmi() < 24) {
+            } else if (metrics.getBmi() < 24.0) {
                 report.setBmiStatus("正常");
-            } else if (metrics.getBmi() < 28) {
+            } else if (metrics.getBmi() >= 24.0 && metrics.getBmi() <= 27.9) {
                 report.setBmiStatus("超重");
                 abnormalIndicators.add("体重超重");
-            } else {
+            } else if (metrics.getBmi() >= 28.0) {
                 report.setBmiStatus("肥胖");
                 abnormalIndicators.add("体重肥胖");
             }
